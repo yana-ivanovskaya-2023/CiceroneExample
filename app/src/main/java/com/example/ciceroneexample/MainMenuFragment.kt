@@ -4,61 +4,69 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.example.ciceroneexample.databinding.FragmentMainMenuBinding
-import com.github.terrakok.cicerone.NavigatorHolder
-import com.github.terrakok.cicerone.androidx.AppNavigator
+import com.example.ciceroneexample.di.AppDi
+import com.example.ciceroneexample.navigation.AppNavigatorFragmentAdapter
+import com.example.ciceroneexample.navigation.IMainMenuNavigatorFactory
 import javax.inject.Inject
 
 
 class MainMenuFragment : Fragment(R.layout.fragment_main_menu) {
 
     @Inject
-    lateinit var navigator: IAppNavigator
-
-//    @Inject
-//    lateinit var navigatorHolder: NavigatorHolder
+    lateinit var mainMenuNavigatorFactory: IMainMenuNavigatorFactory
+    private val mNavigator
+        get() = mainMenuNavigatorFactory.get(AppNavigatorFragmentAdapter(this, R.id.mainMenuRoot))
 
     private val mBinding by viewBindings(FragmentMainMenuBinding::bind)
-//    private val mNavigator
-//        get() = AppNavigator(requireActivity(), R.id.mainMenuRoot)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        IAppComponent.get().inject(this)
+        AppDi.get().inject(this)
         setOnBackPressedListener {
             println("BACK!")
+            // handle by viewmodel
         }
-       // println("navigatorHolder $navigatorHolder")
+        println("MainMenuFragment onCreate")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        println("MainMenuFragment onViewCreated")
         with(mBinding) {
             bottomNavigationView.setOnItemSelectedListener { menuItem ->
                 val item = MainMenuItem.entries.firstOrNull { it.id == menuItem.itemId }
                     ?: return@setOnItemSelectedListener false
 
                 when (item) {
-                    MainMenuItem.RED -> navigator.openScreen(Screen.Red)
-                    MainMenuItem.ORANGE -> navigator.openScreen(Screen.Orange)
-                    MainMenuItem.YELLOW -> navigator.openScreen(Screen.Yellow)
-                    MainMenuItem.GREEN -> navigator.openScreen(Screen.Green)
-                    MainMenuItem.LIGHT_BLUE -> navigator.openScreen(Screen.LightBlue)
+                    MainMenuItem.RED -> mNavigator.openRed()
+                    MainMenuItem.ORANGE -> mNavigator.openOrange()
+                    MainMenuItem.YELLOW -> mNavigator.openYellow()
+                    MainMenuItem.GREEN -> mNavigator.openGreen()
+                    MainMenuItem.LIGHT_BLUE -> mNavigator.openLightBlue()
                 }
 
                 return@setOnItemSelectedListener true
             }
-            bottomNavigationView.selectedItemId = R.id.red
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        println("MainMenuFragment onDestroyView")
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        println("MainMenuFragment onDestroy")
     }
 
     override fun onResume() {
         super.onResume()
-//        navigatorHolder.setNavigator(mNavigator)
+        mNavigator.attach()
     }
 
     override fun onPause() {
-//        navigatorHolder.removeNavigator()
+        mNavigator.detach()
         super.onPause()
     }
 

@@ -2,33 +2,36 @@ package com.example.ciceroneexample
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.github.terrakok.cicerone.NavigatorHolder
-import com.github.terrakok.cicerone.androidx.AppNavigator
+import com.example.ciceroneexample.di.AppDi
+import com.example.ciceroneexample.navigation.AppNavigatorActivityAdapter
+import com.example.ciceroneexample.navigation.IRootNavigatorFactory
 import javax.inject.Inject
 
 
 open class BaseActivity(layoutRes: Int) : AppCompatActivity(layoutRes) {
 
     @Inject
-    protected lateinit var navigatorHolder: NavigatorHolder
+    protected lateinit var rootNavigatorFactory: IRootNavigatorFactory
 
-    private val navigator
-        get() = AppNavigator(this, R.id.root)
+    open val navigator
+        get() = rootNavigatorFactory.get(AppNavigatorActivityAdapter(this))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        IAppComponent.get().inject(this)
+        AppDi.get().inject(this)
     }
 
     override fun onResumeFragments() {
-        println("1 onResumeFragments")
         super.onResumeFragments()
-        navigatorHolder.setNavigator(navigator)
+        navigator.attach()
     }
 
     override fun onPause() {
-        navigatorHolder.removeNavigator()
+        navigator.detach()
         super.onPause()
     }
 
 }
+
+
+
