@@ -8,6 +8,7 @@ import com.example.ciceroneexample.OrangeFragment
 import com.example.ciceroneexample.PurpleFragment
 import com.example.ciceroneexample.RedFragment
 import com.example.ciceroneexample.YellowFragment
+import com.example.feature_one.FeatureOneFragment
 import com.github.terrakok.cicerone.androidx.FragmentScreen
 
 sealed interface Screen {
@@ -44,6 +45,10 @@ sealed interface Screen {
 
     data object Purple : Screen {
         override val value = FragmentScreen { PurpleFragment() }
+    }
+
+    data class FeatureOne(val arg: String) : Screen {
+        override val value = FragmentScreen { FeatureOneFragment.newInstance(arg) }
     }
 
 }

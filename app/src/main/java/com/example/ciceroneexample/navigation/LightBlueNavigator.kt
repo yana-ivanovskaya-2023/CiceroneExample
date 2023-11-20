@@ -12,6 +12,7 @@ import javax.inject.Inject
 interface ILightBlueNavigator {
     fun openDarkBlue()
     fun openPurple()
+    fun openFeatureOne(arg: String)
 }
 
 
@@ -25,6 +26,10 @@ class LightBlueNavigator @Inject constructor(
 
     override fun openPurple() {
         rootNavigatorProvider.open(Screen.Purple)
+    }
+
+    override fun openFeatureOne(arg: String) {
+        rootNavigatorProvider.open(Screen.FeatureOne(arg))
     }
 
 }

@@ -65,6 +65,10 @@ class LightBlueFragment : BaseFragment(R.layout.fragment_more_menu) {
             purple.setOnClickListener {
                 navigator.openPurple()
             }
+
+            featureOne.setOnClickListener {
+                navigator.openFeatureOne("HELLO EVERYBODY")
+            }
         }
     }
 

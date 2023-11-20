@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "CiceroneExample"
 include(":app")
- 
+include(":feature_one")
