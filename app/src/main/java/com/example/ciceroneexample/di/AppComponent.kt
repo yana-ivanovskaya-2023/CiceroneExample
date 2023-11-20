@@ -8,10 +8,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [
-    NavigationModule::class,
-    LocalNavigationModule::class]
-)
+@Component(modules = [LocalNavigationModule::class])
 interface AppComponent {
 
     fun inject(activity: BaseActivity)
