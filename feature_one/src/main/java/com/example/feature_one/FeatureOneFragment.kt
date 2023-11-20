@@ -7,10 +7,18 @@ import androidx.fragment.app.Fragment
 
 class FeatureOneFragment : Fragment(R.layout.fragment_feature_one) {
 
+    private val mEdgeToEdge = EdgeToEdgeState()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<TextView>(R.id.textView).text = arguments?.getString(ARG_1)
+        mEdgeToEdge.set(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mEdgeToEdge.reset(this)
     }
 
     companion object {
